@@ -77,7 +77,7 @@ export const SignUp = ({navigation}) => {
                         <TextInput onChangeText={setName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
                         <TextInput onChangeText={setEmail} style={[styles.input, styles.inputValue]} placeholder="E-mail"></TextInput>
                         <TextInput onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
-                        <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha"></TextInput>
+                        <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry ></TextInput>
 
                         <TouchableOpacity  style={[styles.button, styles.input]}  onPress={handleSubmit}>
                             <Text style={styles.buttonText}>Entrar</Text>

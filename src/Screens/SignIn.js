@@ -67,7 +67,7 @@ export const SignIn = ({navigation}) => {
                     
                     <View style={styles.inputContainer}>
                         <TextInput value={username} onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
-                        <TextInput value={password} onChangeText={setPassword}  style={[styles.input, styles.inputValue]} placeholder="Senha"></TextInput>
+                        <TextInput value={password} onChangeText={setPassword}  style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry></TextInput>
 
                         <View style={styles.signUpContainer}>
                             <TouchableWithoutFeedback onPress={navtigateToSignUpPage}  style={styles.signUp}>
