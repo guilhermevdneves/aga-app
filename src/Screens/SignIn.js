@@ -57,7 +57,7 @@ export const SignIn = ({navigation}) => {
 
     return (
         <BackgroundCover>
-            <ScrollView>
+            <ScrollView >
                 <View style={styles.container}>
                     <Image
                         resizeMode="contain"
@@ -90,11 +90,14 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 50,
+        justifyContent: "space-between"
     },
     logo: {
         alignSelf: "center",
         width: '50%',
+        height: 380
     },
     input: {
         padding: 5,

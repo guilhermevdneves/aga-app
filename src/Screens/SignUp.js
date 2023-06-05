@@ -9,7 +9,7 @@ export const SignUp = ({navigation}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [number, setNumber] = useState('');
 
     const handleSubmit = async () => {
         try{
@@ -17,7 +17,7 @@ export const SignUp = ({navigation}) => {
                 username,
                 password,
                 name,
-                email,
+                number,
             }
             const validationResult = await checkIfSignUpTryIsValid(userData);
 
@@ -75,12 +75,12 @@ export const SignUp = ({navigation}) => {
                         <Text style={styles.signUpTitle}>CADASTRO</Text>
 
                         <TextInput onChangeText={setName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
-                        <TextInput onChangeText={setEmail} style={[styles.input, styles.inputValue]} placeholder="E-mail"></TextInput>
+                        <TextInput onChangeText={setNumber} style={[styles.input, styles.inputValue]} placeholder="Telfone"></TextInput>
                         <TextInput onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
                         <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry ></TextInput>
 
                         <TouchableOpacity  style={[styles.button, styles.input]}  onPress={handleSubmit}>
-                            <Text style={styles.buttonText}>Entrar</Text>
+                            <Text style={styles.buttonText}>Cadastrar</Text>
                         </TouchableOpacity>
 
 

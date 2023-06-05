@@ -9,6 +9,7 @@ import { useAuthContext } from "../context/authContext";
 import { formatDate } from "../utils/formatDate";
 import { generateTimeArray } from "../utils/generateTimeArray";
 import { formatTime } from "../utils/formatTime";
+import { checkIfForWhoTheDateIsReserved } from "../utils/checkIfForWhoTheDateIsReserved";
 
 
 const currentDate = new Date();
@@ -77,15 +78,21 @@ export const Home = ({navigation}) => {
                         data={dateData.timeArray}
                         keyExtractor={(item) => item.getTime()}
                         renderItem={({item}) => 
+                        (item.getTime() > currentDate.getTime() &&
                             <Square
+                                allDates={fetchedDates}
                                 fetchData={fetchData}
+                                reservedBy={fetchedDates.find(somDate => new Date(somDate.date).getTime() === currentDate.getTime())}
                                 squareDate={item} 
-                                disabledSquare={item.getTime() <= currentDate.getTime()}
-                                reserved={fetchedDates.some(somDate => new Date(somDate.date).getTime() === item.getTime())}
+                                reserved={checkIfForWhoTheDateIsReserved({
+                                    currentDate: item,
+                                    fetchedDates,
+                                    currentUserId: authToken.user._id
+                                })}
                             >
                                 {formatTime(item)}
                             </Square>
-                        }
+                        )}
                         numColumns={4}
                     />
                 </View>
@@ -103,7 +110,7 @@ const styles = StyleSheet.create({
     },
     dateContainer: {
         display: "flex",
-        alignItems: 'center',
+        alignItems: 'center',   
         justifyContent: 'space-between',
         paddingHorizontal: 25,
         height: '100%',

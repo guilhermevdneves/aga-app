@@ -1,4 +1,5 @@
 import * as yup from 'yup'
+const regex = /^^([1-9]{2})[0-9]{8,9}$/
 
 const loginSchema = yup.object().shape({
   username: yup.string().required(),
@@ -13,7 +14,7 @@ export const checkIfLoginTryIsValid = data => {
 
 const signUpSchema = yup.object().shape({
   username: yup.string().required(),
-  email: yup.string().email().required(),
+  number: yup.string().required().matches(regex),
   name: yup.string().required(),
   password: yup.string().required()
 })

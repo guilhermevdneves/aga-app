@@ -3,8 +3,11 @@ import { formatDate } from "../../utils/formatDate";
 import { formatTime } from "../../utils/formatTime";
 import { addDate } from "../../services/dates";
 import { useAuthContext } from "../../context/authContext";
+import { SquareTypes } from "../../constants/SquareTypes";
+import { getUserDetails } from "../../services/user";
+import { checkIfUserHasAselectedDate } from "../../utils/checkIfUserHasAselectedDate";
 
-export const Square = ({children, reserved, squareDate, fetchData, disabledSquare}) => {
+export const Square = ({children, reserved, squareDate, fetchData, allDates }) => {
   const {authToken} = useAuthContext();
 
   const handleConfirmDate = async () => {
@@ -12,7 +15,6 @@ export const Square = ({children, reserved, squareDate, fetchData, disabledSquar
       userId: authToken.user._id,
       date: squareDate
     }
-    console.log( authToken.user._id);
     try{
       await addDate(authToken, data);
       await fetchData()
@@ -23,7 +25,29 @@ export const Square = ({children, reserved, squareDate, fetchData, disabledSquar
   }
   
   const handlePress = () => {
-      Alert.alert(
+
+     const result = checkIfUserHasAselectedDate(allDates, authToken.user._id)
+     console.log('result', result)
+    if(result) {
+      return Alert.alert(
+        'Atenção!',
+        `Deseja cancelar o serviço para o dia ${formatDate(new Date(result.date))}, ${formatTime(new Date(result.date))} e marcar para o dia ${formatDate(squareDate)}, ${formatTime(squareDate)} `,
+        [
+            {
+              text: 'Okay',
+              style: 'destructive',
+              onPress: handleConfirmDate
+            },
+
+            {
+              text: 'Cancelar',
+              style: 'cancel',
+            }
+        ]
+      );
+    }
+
+      return Alert.alert(
         'Atenção!',
         `Deseja reservar o serviço para o dia ${formatDate(squareDate)}, ${formatTime(squareDate)}`,
         [
@@ -40,31 +64,43 @@ export const Square = ({children, reserved, squareDate, fetchData, disabledSquar
         ]
       );
     }
-    console.log('disabledSquare', disabledSquare, squareDate )
-    if(disabledSquare) {
-      return(
 
-        <View 
-          style={[styles.container, styles.disabled]} 
-        >
-        <Text style={styles.disabledText}>
-          {children}
-        </Text>
-      </View>
-      )
+    const showUserDetails = async () => {
+      try {
+        const response = await getUserDetails(authToken, reserved.reservedBy);
+        
+        Alert.alert(
+          'Info!',
+          `Data reservada por ${response.data.name} \nNumero para contato ${response.data.number}`,
+        );
+      } catch(e) {
+      console.log(e)
+      }
+     
     }
 
-    return (
-      <>
+  if(authToken.user.admin) {
+    return  (
       <TouchableOpacity 
-        style={[styles.container, reserved ? styles.reserved : styles.notReserved]} 
+        style={[styles.container, styles[reserved.status]]} 
+        onPress={reserved.status === SquareTypes.FREE ? () => undefined : showUserDetails}
+      >
+        <Text style={styles.text}>
+          {children}
+        </Text>
+      </TouchableOpacity>
+    )
+  }
+
+    return (
+      <TouchableOpacity 
+        style={[styles.container, styles[reserved.status]]} 
         onPress={handlePress}
       >
         <Text style={styles.text}>
           {children}
         </Text>
       </TouchableOpacity>
-      </>
     )
 }
 
@@ -77,17 +113,17 @@ const styles = StyleSheet.create({
       display: "flex",
       alignItems: 'center'
     },
-    reserved: {
+    RESERVED_BY_OTHERS: {
       backgroundColor: 'rgba(255, 0, 0, 0.2)',
     },
-    notReserved: {
+    RESERVED_BY_USER: {
+      backgroundColor: 'rgba(0, 0, 255, 0.2)',
+    },
+    FREE: {
       backgroundColor: 'rgba(0, 255, 0, 0.2)',
     },
     disabled: {
       backgroundColor: 'rgba(71, 71, 71, 0.7)',
-    },
-    disabledText: {
-      color: 'rgb(71, 71, 71)',
     },
     text: {
       color: 'white'
