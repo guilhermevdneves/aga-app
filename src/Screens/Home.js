@@ -1,6 +1,6 @@
 import { Text, StyleSheet, SafeAreaView, StatusBar, FlatList, View, ScrollView, Image, TouchableWithoutFeedback } from "react-native";
 import logo from '../../assets/Barbearia_Branco.png';
-import { Entypo } from '@expo/vector-icons'; 
+import { Entypo, FontAwesome } from '@expo/vector-icons'; 
 import { BackgroundCover } from "../components/BackgroundCover/BackgroundCover";
 import { Square } from "../components/Square/Square";
 import { useEffect, useState } from "react";
@@ -17,7 +17,7 @@ const currentDate = new Date();
 export const Home = ({navigation}) => {
     const [dateData, setDateData] = useState(generateTimeArray(new Date()));
     const [fetchedDates, setFetchedDates] = useState([]);
-    const {authToken} = useAuthContext();
+    const {authToken, setAuthToken } = useAuthContext();
 
     const fetchData = async () => {
         const response  = await getDates(authToken);
@@ -44,14 +44,15 @@ export const Home = ({navigation}) => {
     
     useEffect(() => {fetchData()},[])
 
-    const handleSelectDate = () => {
-    }
-
     return (
         <BackgroundCover>
             <SafeAreaView style={styles.container}>
                 <StatusBar  style='light'/>
-
+                <View  style={styles.signOutContainer}>
+                    <TouchableWithoutFeedback onPress={() => setAuthToken('')}>
+                        <FontAwesome name="sign-out" size={24} color="white" />
+                    </TouchableWithoutFeedback>
+                </View>
                 <Image
                     resizeMode="contain"
                     style={styles.logo}
@@ -130,6 +131,15 @@ const styles = StyleSheet.create({
     noContent: {
         height: 18.5,
         width: 18.5   
+    },
+    signOutContainer: {
+        width: '100%',
+        height: 50,
+        display: 'flex',
+        alignItems: "flex-end",
+        paddingTop: 10,
+        paddingHorizontal: 25,
+        justifyContent: 'center',
     }
 });
   

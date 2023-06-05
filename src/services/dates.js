@@ -5,6 +5,6 @@ export const getDates = async (authToken) => {
 }
 
 
-export const addDate = async (authToken, data) => {
+export const updateDate = async (authToken, data) => {
   return await api.put('/dates', data, { headers: { Authorization: authToken.token } });
 }

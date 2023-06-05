@@ -1,9 +1,10 @@
-import { Text, View, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { Text, View, StyleSheet, TextInput, Image, TouchableOpacity, ScrollView, Alert, TouchableWithoutFeedback } from "react-native";
 import logo from '../../assets/Barbearia_Branco.png';
 import { BackgroundCover } from "../components/BackgroundCover/BackgroundCover";
 import { checkIfSignUpTryIsValid } from "../utils/checkIfIsAValidUser";
 import { useState } from "react";
 import { api } from "../services/apiConnector";
+import { Ionicons } from '@expo/vector-icons'; 
 
 export const SignUp = ({navigation}) => {
     const [username, setUsername] = useState('');
@@ -66,6 +67,13 @@ export const SignUp = ({navigation}) => {
         <BackgroundCover>
             <ScrollView>
                 <View style={styles.container}>
+
+                    <View  style={styles.backContainer}>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate('Signin')}>
+                            <Ionicons name="arrow-back-outline" size={24} color="white" />
+                        </TouchableWithoutFeedback>
+                    </View>
+
                     <Image
                         resizeMode="contain"
                         style={styles.logo}
@@ -75,7 +83,7 @@ export const SignUp = ({navigation}) => {
                         <Text style={styles.signUpTitle}>CADASTRO</Text>
 
                         <TextInput onChangeText={setName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
-                        <TextInput onChangeText={setNumber} style={[styles.input, styles.inputValue]} placeholder="Telfone"></TextInput>
+                        <TextInput onChangeText={setNumber} style={[styles.input, styles.inputValue]} placeholder="Telefone"></TextInput>
                         <TextInput onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
                         <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry ></TextInput>
 
@@ -95,12 +103,13 @@ const styles = StyleSheet.create({
     container: {
         display: 'flex',
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 50
     },
     logo: {
         alignSelf: "center",
         width: '50%',
-        height: 300
+        height: 250
     },
     input: {
         padding: 5,
@@ -144,6 +153,14 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 25,
       marginBottom: 18
+    },
+    backContainer: {
+        width: '100%',
+        height: 50,
+        display: 'flex',
+        paddingTop: 10,
+        paddingHorizontal: 25,
+        justifyContent: 'center',
     }
 });
   

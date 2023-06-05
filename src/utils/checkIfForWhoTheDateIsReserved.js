@@ -4,7 +4,7 @@ export const checkIfForWhoTheDateIsReserved = ({currentDate, fetchedDates, curre
   const result = fetchedDates.find(somDate => new Date(somDate.date).getTime() === currentDate.getTime())
 
 
-  if(!result) {
+  if(!result || !result.reservedBy) {
     return {
       status: SquareTypes.FREE
     }

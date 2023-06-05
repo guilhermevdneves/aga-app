@@ -1,7 +1,7 @@
 import { Text, StyleSheet, TouchableOpacity, Alert, View } from "react-native";
 import { formatDate } from "../../utils/formatDate";
 import { formatTime } from "../../utils/formatTime";
-import { addDate } from "../../services/dates";
+import { updateDate } from "../../services/dates";
 import { useAuthContext } from "../../context/authContext";
 import { SquareTypes } from "../../constants/SquareTypes";
 import { getUserDetails } from "../../services/user";
@@ -16,7 +16,29 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
       date: squareDate
     }
     try{
-      await addDate(authToken, data);
+      await updateDate(authToken, data);
+      await fetchData()
+    }
+    catch(e) {
+      console.log(e)
+    }
+  }
+
+  
+  const handleCancelDateAndConfirmOther = async (previousDate) => {
+    console.log(previousDate, squareDate)
+    const previousData = {
+      date: previousDate
+    }
+
+    const newData = {
+      userId: authToken.user._id,
+      date: squareDate
+    }
+
+    try{
+      await updateDate(authToken, previousData);
+      await updateDate(authToken, newData);
       await fetchData()
     }
     catch(e) {
@@ -25,7 +47,6 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
   }
   
   const handlePress = () => {
-
      const result = checkIfUserHasAselectedDate(allDates, authToken.user._id)
      console.log('result', result)
     if(result) {
@@ -36,7 +57,7 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
             {
               text: 'Okay',
               style: 'destructive',
-              onPress: handleConfirmDate
+              onPress: () => handleCancelDateAndConfirmOther(new Date(result.date))
             },
 
             {
@@ -64,14 +85,14 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
         ]
       );
     }
-
+    
     const showUserDetails = async () => {
       try {
         const response = await getUserDetails(authToken, reserved.reservedBy);
-        
+
         Alert.alert(
-          'Info!',
-          `Data reservada por ${response.data.name} \nNumero para contato ${response.data.number}`,
+          'Confirmado!',
+          `Horário ${formatTime(squareDate)} reservado por ${response.data.name} \nNumero para contato: ${response.data.number}`,
         );
       } catch(e) {
       console.log(e)
@@ -95,7 +116,7 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
     return (
       <TouchableOpacity 
         style={[styles.container, styles[reserved.status]]} 
-        onPress={handlePress}
+        onPress={reserved.status !== SquareTypes.FREE ? () => undefined : handlePress}
       >
         <Text style={styles.text}>
           {children}
