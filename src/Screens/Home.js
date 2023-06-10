@@ -11,13 +11,18 @@ import { generateTimeArray } from "../utils/generateTimeArray";
 import { formatTime } from "../utils/formatTime";
 import { checkIfForWhoTheDateIsReserved } from "../utils/checkIfForWhoTheDateIsReserved";
 
-
 const currentDate = new Date();
 
 export const Home = ({navigation}) => {
-    const [dateData, setDateData] = useState(generateTimeArray(new Date()));
+    const [dateData, setDateData] = useState();
     const [fetchedDates, setFetchedDates] = useState([]);
     const {authToken, setAuthToken } = useAuthContext();
+
+    const renderRelevantSquares = (date = new Date()) => {
+        const dates = generateTimeArray(date)
+
+        return {...dates, timeArray: dates.timeArray.filter(item => item.getTime() > currentDate.getTime() )};
+    }
 
     const fetchData = async () => {
         const response  = await getDates(authToken);
@@ -29,7 +34,7 @@ export const Home = ({navigation}) => {
             const newDate = new Date(prevState.selectedDate)
             newDate.setDate(newDate.getDate() + 1);
 
-            return generateTimeArray(newDate);
+            return renderRelevantSquares(newDate);
         });
     }
 
@@ -38,11 +43,14 @@ export const Home = ({navigation}) => {
             const newDate = new Date(prevState.selectedDate)
             newDate.setDate(newDate.getDate() - 1);
 
-            return generateTimeArray(newDate);
+            return renderRelevantSquares(newDate);
         });
     }
     
-    useEffect(() => {fetchData()},[])
+    useEffect(() => {
+        fetchData();
+        setDateData(renderRelevantSquares());
+    },[])
 
     return (
         <BackgroundCover>
@@ -58,6 +66,8 @@ export const Home = ({navigation}) => {
                     style={styles.logo}
                     source={logo}
                 />
+            {dateData && 
+            <>
                 <View style={styles.date}>
                     { formatDate(dateData.selectedDate)  !== formatDate(currentDate) ?
                         <TouchableWithoutFeedback onPress={decreaseDate}>
@@ -75,28 +85,35 @@ export const Home = ({navigation}) => {
                 </View>
 
                 <View style={styles.dateContainer}>
-                    <FlatList 
-                        data={dateData.timeArray}
-                        keyExtractor={(item) => item.getTime()}
-                        renderItem={({item}) => 
-                        (item.getTime() > currentDate.getTime() &&
-                            <Square
-                                allDates={fetchedDates}
-                                fetchData={fetchData}
-                                reservedBy={fetchedDates.find(somDate => new Date(somDate.date).getTime() === currentDate.getTime())}
-                                squareDate={item} 
-                                reserved={checkIfForWhoTheDateIsReserved({
-                                    currentDate: item,
-                                    fetchedDates,
-                                    currentUserId: authToken.user._id
-                                })}
-                            >
-                                {formatTime(item)}
-                            </Square>
-                        )}
-                        numColumns={4}
-                    />
+                   
+                        <FlatList 
+                            style={{ flex: 1}}
+                            data={dateData.timeArray}
+                            scrollEnabled={true}
+                            keyExtractor={(item) => item.getTime()}
+                            numColumns={4}
+                            renderItem={({item}) => 
+                            ( 
+                                <Square
+                                    allDates={fetchedDates}
+                                    fetchData={fetchData}
+                                    reservedBy={fetchedDates.find(somDate => new Date(somDate.date).getTime() === currentDate.getTime())}
+                                    squareDate={item} 
+                                    reserved={checkIfForWhoTheDateIsReserved({
+                                        currentDate: item,
+                                        fetchedDates,
+                                        currentUserId: authToken.user._id
+                                    })}
+                                >
+                                    {formatTime(item)}
+                                </Square>
+                            )}
+                        
+                        />
                 </View>
+                </>
+            }
+
             </SafeAreaView>
         </BackgroundCover>
     );
@@ -109,12 +126,12 @@ const styles = StyleSheet.create({
         height: 100,
         marginVertical: 50
     },
+    container: {
+        flex: 1,
+    },
     dateContainer: {
-        display: "flex",
-        alignItems: 'center',   
-        justifyContent: 'space-between',
+        flex: 1,
         paddingHorizontal: 25,
-        height: '100%',
     },
     date: {
         display: "flex",

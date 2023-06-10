@@ -127,12 +127,12 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
 
 const styles = StyleSheet.create({
     container: {
-      width: '25%',
+      flex: 1 / 4,
       paddingVertical: 30,
       borderWidth: 0.182,
       borderColor: 'rgba(117,117,117)',
       display: "flex",
-      alignItems: 'center'
+      alignItems: 'center',
     },
     RESERVED_BY_OTHERS: {
       backgroundColor: 'rgba(255, 0, 0, 0.2)',
