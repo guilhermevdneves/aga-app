@@ -3,6 +3,7 @@ import logo from '../../assets/Barbearia_Branco.png';
 import { BackgroundCover } from "../components/BackgroundCover/BackgroundCover";
 import { checkIfSignUpTryIsValid } from "../utils/checkIfIsAValidUser";
 import { useState } from "react";
+import {maskPhoneFixo, maskPhone, removeMask} from '../masks/number'
 import { api } from "../services/apiConnector";
 import { Ionicons } from '@expo/vector-icons'; 
 
@@ -14,11 +15,12 @@ export const SignUp = ({navigation}) => {
 
     const handleSubmit = async () => {
         try{
+            console.log(removeMask(number))
             const userData = {
                 username,
                 password,
                 name,
-                number,
+                number: removeMask(number),
             }
             const validationResult = await checkIfSignUpTryIsValid(userData);
 
@@ -62,6 +64,14 @@ export const SignUp = ({navigation}) => {
         }
     }
 
+    const handleChangeNumber = (number) => {
+      
+        const numberWithoutMask = removeMask(number) 
+        console.log('numberWithoutMask', numberWithoutMask)
+
+        setNumber(() =>  number.length === 11 ? maskPhoneFixo(numberWithoutMask) : maskPhone(numberWithoutMask))
+    }
+
 
     return (
         <BackgroundCover>
@@ -83,7 +93,7 @@ export const SignUp = ({navigation}) => {
                         <Text style={styles.signUpTitle}>CADASTRO</Text>
 
                         <TextInput onChangeText={setName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
-                        <TextInput onChangeText={setNumber} style={[styles.input, styles.inputValue]} placeholder="Telefone"></TextInput>
+                        <TextInput value={number} onChangeText={(number) => handleChangeNumber(number)} style={[styles.input, styles.inputValue]} placeholder="Telefone"></TextInput>
                         <TextInput onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
                         <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry ></TextInput>
 
