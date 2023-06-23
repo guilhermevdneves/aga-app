@@ -100,6 +100,22 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
      
     }
 
+    console.log(squareDate, new Date().toLocaleString('pt-BR', { timeZone: 'UTC' }))
+
+  if(squareDate <= new Date().toLocaleString('pt-BR', { timeZone: 'UTC' })) {
+    return (
+      <View 
+          style={[styles.container, styles.RESERVED_BY_OTHERS]} 
+          onPress={reserved.status !== SquareTypes.FREE ? () => undefined : handlePress}
+      >
+        <Text style={styles.text}>
+          {children}
+        </Text>
+      </View>
+    )
+    
+  }
+
   if(authToken.user.admin) {
     return  (
       <TouchableOpacity 
