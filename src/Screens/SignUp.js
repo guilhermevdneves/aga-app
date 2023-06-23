@@ -15,7 +15,19 @@ export const SignUp = ({navigation}) => {
 
     const handleSubmit = async () => {
         try{
-            console.log(removeMask(number))
+            if (password.length < 8) {
+                Alert.alert(
+                'Erro!',
+                'A senha deve ter no mínimo 8 caracteres',
+                [
+                    {
+                    text: 'Okay',
+                    },
+                ]
+                );
+                return; // Retorna aqui para interromper o processo de submissão
+            }
+
             const userData = {
                 username,
                 password,
@@ -72,7 +84,14 @@ export const SignUp = ({navigation}) => {
         setNumber(() =>  number.length === 11 ? maskPhoneFixo(numberWithoutMask) : maskPhone(numberWithoutMask))
     }
 
+    function handleChangeName(nameChanges) {
+        var regex = new RegExp(/^[a-zA-Z]+$/); // Expressão regular para verificar se contém apenas letras
 
+        if(regex.test(nameChanges)) {
+            setName(nameChanges)
+        }
+    }
+    
     return (
         <BackgroundCover>
             <ScrollView>
@@ -92,7 +111,7 @@ export const SignUp = ({navigation}) => {
                     <View style={styles.inputContainer}>
                         <Text style={styles.signUpTitle}>CADASTRO</Text>
 
-                        <TextInput onChangeText={setName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
+                        <TextInput value={name} onChangeText={handleChangeName} style={[styles.input, styles.inputValue]} placeholder="Nome"></TextInput>
                         <TextInput value={number} onChangeText={(number) => handleChangeNumber(number)} style={[styles.input, styles.inputValue]} placeholder="Telefone"></TextInput>
                         <TextInput onChangeText={setUsername} style={[styles.input, styles.inputValue]} placeholder="Username"></TextInput>
                         <TextInput onChangeText={setPassword} style={[styles.input, styles.inputValue]} placeholder="Senha" secureTextEntry ></TextInput>

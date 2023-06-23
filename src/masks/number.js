@@ -16,8 +16,5 @@ export const maskPhone = value => {
 
 export const removeMask = value => {
     return value
-    .replace(")", "")
-    .replace("(", "")
-    .replace("-", "")
-    .replace(' ', '')
+    .replace(/[() -]/g, "($1) $2")
 }
