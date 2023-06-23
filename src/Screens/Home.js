@@ -21,7 +21,7 @@ export const Home = ({navigation}) => {
     const renderRelevantSquares = (date = new Date()) => {
         const dates = generateTimeArray(date)
 
-        return {...dates, timeArray: dates.timeArray.filter(item => item.getTime() > currentDate.getTime() )};
+        return {...dates, timeArray: dates.timeArray};
     }
 
     const fetchData = async () => {
