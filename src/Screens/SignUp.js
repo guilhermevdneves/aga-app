@@ -34,6 +34,8 @@ export const SignUp = ({navigation}) => {
                 name,
                 number: removeMask(number),
             }
+
+            console.log('userData', userData);
             const validationResult = await checkIfSignUpTryIsValid(userData);
 
             if(!validationResult) {
@@ -79,13 +81,12 @@ export const SignUp = ({navigation}) => {
     const handleChangeNumber = (number) => {
       
         const numberWithoutMask = removeMask(number) 
-        console.log('numberWithoutMask', numberWithoutMask)
 
-        setNumber(() =>  number.length === 11 ? maskPhoneFixo(numberWithoutMask) : maskPhone(numberWithoutMask))
+        setNumber(() =>  numberWithoutMask.length < 11 ? maskPhoneFixo(numberWithoutMask) : maskPhone(numberWithoutMask))
     }
 
     function handleChangeName(nameChanges) {
-        var regex = new RegExp(/^[a-zA-Z]+$/); // Expressão regular para verificar se contém apenas letras
+        var regex = new RegExp(/^[a-zA-Z]*$/); // Expressão regular para verificar se contém apenas letras
 
         if(regex.test(nameChanges)) {
             setName(nameChanges)

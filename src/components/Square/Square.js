@@ -100,9 +100,7 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
      
     }
 
-    console.log(squareDate, new Date().toLocaleString('pt-BR', { timeZone: 'UTC' }))
-
-  if(squareDate <= new Date().toLocaleString('pt-BR', { timeZone: 'UTC' })) {
+  if(squareDate <= new Date()) {
     return (
       <View 
           style={[styles.container, styles.RESERVED_BY_OTHERS]} 
