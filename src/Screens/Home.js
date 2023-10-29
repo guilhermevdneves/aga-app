@@ -10,8 +10,51 @@ import { formatDate } from "../utils/formatDate";
 import { generateTimeArray } from "../utils/generateTimeArray";
 import { formatTime } from "../utils/formatTime";
 import { checkIfForWhoTheDateIsReserved } from "../utils/checkIfForWhoTheDateIsReserved";
+import * as BackgroundFetch from "expo-background-fetch"
+import * as TaskManager from "expo-task-manager"
+import { getScheduleDate } from "../storage/scheduleDateStorage ";
+import * as Notifications from 'expo-notifications';
 
 const currentDate = new Date();
+const TASK_NAME = "BACKGROUND_TASK";
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
+
+const gettimeLeftutilScheduleDate = async (date) => {
+    const scheduleDate = new Date(date);
+    
+    if(currentDate.getTime() > scheduleDate.getTime()){
+        return;
+    }
+
+    scheduleDate.setMinutes(scheduleDate.getMinutes() - 30);
+
+    if(currentDate.getTime() >= scheduleDate.getTime() ) {
+        Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Alerta! ',
+              body: `Você tem um horário agendado com o Gilberto às ${formatTime(new Date(date))}`,
+            },
+            trigger: null,
+          });
+
+        await BackgroundFetch.unregisterTaskAsync(TASK_NAME)
+    }
+}
+
+TaskManager.defineTask(TASK_NAME, async (a) => {
+    const scheduleDate = await getScheduleDate(); 
+    
+    gettimeLeftutilScheduleDate(scheduleDate)
+});
+
 
 export const Home = ({navigation}) => {
     const [dateData, setDateData] = useState();
@@ -46,11 +89,24 @@ export const Home = ({navigation}) => {
             return renderRelevantSquares(newDate);
         });
     }
-    
+
+    const RegisterBackgroundTask = async () => {
+        try {
+          await BackgroundFetch.registerTaskAsync(TASK_NAME, {
+            minimumInterval: 30,
+        })
+
+        } catch (err) {
+          console.log("Task Register failed:", err)
+        }
+    }
+
     useEffect(() => {
         fetchData();
         setDateData(renderRelevantSquares());
+        RegisterBackgroundTask();
     },[])
+
 
     return (
         <BackgroundCover>
