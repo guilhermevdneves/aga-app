@@ -93,7 +93,7 @@ export const Home = ({navigation}) => {
     const RegisterBackgroundTask = async () => {
         try {
           await BackgroundFetch.registerTaskAsync(TASK_NAME, {
-            minimumInterval: 30,
+            minimumInterval: 5,
         })
 
         } catch (err) {
