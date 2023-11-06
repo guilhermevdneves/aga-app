@@ -86,7 +86,7 @@ export const SignUp = ({navigation}) => {
     }
 
     function handleChangeName(nameChanges) {
-        var regex = new RegExp(/^[a-zA-Z]*$/); // Expressão regular para verificar se contém apenas letras
+        var regex = new RegExp(/^[a-zA-Z\s]*$/); // Expressão regular para verificar se contém apenas letras
 
         if(regex.test(nameChanges)) {
             setName(nameChanges)
