@@ -6,6 +6,8 @@ import { useAuthContext } from "../../context/authContext";
 import { SquareTypes } from "../../constants/SquareTypes";
 import { getUserDetails } from "../../services/user";
 import { checkIfUserHasAselectedDate } from "../../utils/checkIfUserHasAselectedDate";
+import moment from 'moment';
+import 'moment-timezone';
 
 export const Square = ({children, reserved, squareDate, fetchData, allDates }) => {
   const {authToken} = useAuthContext();
@@ -99,8 +101,7 @@ export const Square = ({children, reserved, squareDate, fetchData, allDates }) =
       }
      
     }
-
-  if(squareDate <= new Date()) {
+  if(squareDate <= moment.tz('America/Sao_Paulo')) {
     return (
       <View 
           style={[styles.container, styles.RESERVED_BY_OTHERS]} 

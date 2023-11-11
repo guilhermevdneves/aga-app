@@ -14,10 +14,15 @@ import * as BackgroundFetch from "expo-background-fetch"
 import * as TaskManager from "expo-task-manager"
 import { getScheduleDate } from "../storage/scheduleDateStorage ";
 import * as Notifications from 'expo-notifications';
+import moment from 'moment';
+import 'moment-timezone';
 
-const currentDate = new Date();
+import { getDataLocal } from "../utils/getCurrentTime";
+
+const currentDate = moment.tz('America/Sao_Paulo').toDate()
 const TASK_NAME = "BACKGROUND_TASK";
 
+getDataLocal();
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -61,7 +66,7 @@ export const Home = ({navigation}) => {
     const [fetchedDates, setFetchedDates] = useState([]);
     const {authToken, setAuthToken } = useAuthContext();
 
-    const renderRelevantSquares = (date = new Date()) => {
+    const renderRelevantSquares = (date = currentDate) => {
         const dates = generateTimeArray(date)
 
         return {...dates, timeArray: dates.timeArray};
@@ -107,6 +112,15 @@ export const Home = ({navigation}) => {
         RegisterBackgroundTask();
     },[])
 
+  // Criar um objeto Moment para a data atual no fuso horário do navegador
+  const agora = moment();
+
+  // Criar um objeto Moment para uma data específica com um fuso horário específico
+  const data = moment.tz('2023-01-01T12:00:00', 'America/New_York');
+
+  // Formatar e exibir as datas
+  console.log('Agora:', agora.format());
+  console.log('Data:', data.format());
 
     return (
         <BackgroundCover>
