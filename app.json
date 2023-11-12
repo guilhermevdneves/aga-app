@@ -15,19 +15,31 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.agaapp.ifsp",
+      "buildNumber": "1.0.0",
       "supportsTablet": true,
       "infoPlist": {
-        "UIBackgroundModes": ["location", "fetch"]
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.agaapp.ifsp",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "febd92c3-7af6-4586-83a6-2f3ede3a097d"
+      }
     }
   }
 }
