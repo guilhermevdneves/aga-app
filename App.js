@@ -5,7 +5,8 @@ import Routes from './src/routes';
 export default function App() {
   return (
     <AuthContextProvider>
-    <Routes/>
+      <StatusBar translucent backgroundColor="transparent" style='light' />
+      <Routes/>
     </AuthContextProvider>
   );
 }

@@ -1,6 +1,9 @@
-import { Text, View, StyleSheet, ImageBackground, TextInput } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, TextInput, Platform } from "react-native";
+
 import {Dimensions} from 'react-native';
 import  background  from '../../../assets/background.jpeg'
+import { StatusBar } from "react-native";
+
 export const BackgroundCover = ({children}) => {
     return (
         <ImageBackground
@@ -15,6 +18,8 @@ export const BackgroundCover = ({children}) => {
     )
 }
 
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : StatusBar.currentHeight;
+
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
@@ -23,7 +28,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
+        height: (Dimensions.get('window').height + STATUSBAR_HEIGHT)
     },
     opacity: {
         position: 'absolute',
@@ -33,7 +38,7 @@ const styles = StyleSheet.create({
         left: 0,
         backgroundColor: 'rgba(0,0,0,0.7)',
         width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height
+        height:(Dimensions.get('window').height + STATUSBAR_HEIGHT)
     }
 });
   
